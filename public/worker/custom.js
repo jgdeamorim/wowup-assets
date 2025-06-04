@@ -1,8 +1,30 @@
-console.log('custom.js carregado em:', window.location.href);
+(function() {
+  'use strict';
 
-if (window.location.href.includes('app.wowup.com.br/home')) {
-  const message = document.createElement('p');
-  message.textContent = 'Teste de JavaScript injetado!';
-  message.style.color = '#1a73e8';
-  document.body.appendChild(message);
-}
+  console.log("custom.js carregado em:", location.href);
+
+  // Intercepta fetch
+  const origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    const url = typeof input === 'string' ? new URL(input) : new URL(input.url || '');
+    if (url.searchParams.has('domain')) {
+      url.searchParams.set('domain', 'app.botpenguin.com');
+      console.log("fetch ajustado para:", url.toString());
+      input = url.toString();
+    }
+    return origFetch(input, init);
+  };
+
+  // Intercepta XMLHttpRequest
+  const origXHR = window.XMLHttpRequest;
+  const origOpen = origXHR.prototype.open;
+  origXHR.prototype.open = function(method, url, async, user, password) {
+    const parsedURL = new URL(url, location.href);
+    if (parsedURL.searchParams.has('domain')) {
+      parsedURL.searchParams.set('domain', 'app.botpenguin.com');
+      console.log("XHR ajustado para:", parsedURL.toString());
+      url = parsedURL.toString();
+    }
+    return origOpen.call(this, method, url, async, user, password);
+  };
+})();
