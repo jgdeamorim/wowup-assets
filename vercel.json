@@ -1,22 +1,13 @@
 {
   "rewrites": [
-    { "source": "/worker/(.*)", "destination": "/public/worker/$1" },
-    { "source": "/custom.css", "destination": "/public/worker/custom.css" },
-    { "source": "/custom.js", "destination": "/public/worker/custom.js" }
+    { "source": "/worker/(.*)", "destination": "/worker/$1" }
   ],
   "headers": [
     {
       "source": "/worker/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "max-age=3600" }
-      ]
-    },
-    {
-      "source": "/custom.(css|js)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
   ]
